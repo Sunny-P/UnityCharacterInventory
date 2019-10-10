@@ -12,12 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 059f6bcc50c845540a7039bccdc67d1b, type: 3}
   m_Name: TestItem
   m_EditorClassIdentifier: 
-  itemType: 0
+  itemType: 1
   armourType: 0
+  weaponType: 0
+  equipmentSlot: 0
   applyRandomStats: 0
-  strength: 32
-  agility: 0
-  constitution: 0
-  intellect: 0
-  physicalArmour: 0
-  magicalArmour: 0
+  strength: 5
+  agility: 4
+  constitution: 5
+  intellect: 19
+  physicalArmour: 3
+  magicalArmour: 1
+  inventorySprite: {fileID: 21300000, guid: 3613a410bbe250548a2f3399935eb781, type: 3}

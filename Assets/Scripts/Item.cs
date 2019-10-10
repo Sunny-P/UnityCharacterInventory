@@ -1,12 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [System.Serializable]
 [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/Item", order = 1)]
 public class Item : ScriptableObject
 {
-
     public enum ItemType
     {
         Weapon,
@@ -20,9 +20,32 @@ public class Item : ScriptableObject
         Heavy
     }
 
+    public enum WeaponType
+    {
+        Sword,
+        Staff,
+        Bow
+    }
+
+    public enum EquipmentSlot
+    {
+        Head,
+        Shoulders,
+        Chest,
+        Legs,
+        Feet,
+        Hands,
+        Weapon,
+        Ring1,
+        Ring2,
+        Neck
+    }
+
     [Header("Item Types")]
     public ItemType itemType;
     public ArmourType armourType;
+    public WeaponType weaponType;
+    public EquipmentSlot equipmentSlot;
 
     [Header("Stat Bonuses")]
     public bool applyRandomStats;
@@ -33,15 +56,9 @@ public class Item : ScriptableObject
     public int physicalArmour;
     public int magicalArmour;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [Header("Image")]
+    public Sprite inventorySprite;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    [Header("Inventory Space")]
+    public int[][] inventorySpace;
 }
