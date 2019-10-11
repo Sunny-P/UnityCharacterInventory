@@ -59,6 +59,15 @@ public class Item : ScriptableObject
     [Header("Image")]
     public Sprite inventorySprite;
 
+    // TODO: Add editor functionality to define how much inventorySpace we take up
     [Header("Inventory Space")]
-    public int[][] inventorySpace;
+    public int[,][,] inventorySpace;
+
+    // TODO: Add a section for Tooltip on mouseover.
+
+    // Possible room to add Trait section. List of Traits. Required for Production game
+    // Trait randomness/chance needs to be an option as well
+
+    // TODO: Add a function to apply random values to stats -> So we can also dynamically apply random stats on spawn rather than just our predefined item stats
+    // Parameters: ref stat value to chance, minRandomRange value, maxRandomRange value
 }

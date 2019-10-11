@@ -26,7 +26,7 @@ public class ItemEditor : Editor
     delegate void ItemDelegate();
     ItemDelegate methodToCall;
 
-    bool foldoutImageProperties = false;
+    //bool foldoutImageProperties = false;
     bool useCustomImage;
 
     SerializedProperty itemImage;
@@ -104,14 +104,14 @@ public class ItemEditor : Editor
             CreateLabelWithRange("Magical Armour", statLabelWidth, ref magicalArmourRange.min, ref magicalArmourRange.max);
 
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("Str: " + itemScript.strength, EditorStyles.miniBoldLabel, GUILayout.Width(90));
-            EditorGUILayout.LabelField("Agi: " + itemScript.agility, EditorStyles.miniBoldLabel, GUILayout.Width(90));
-            EditorGUILayout.LabelField("Con: " + itemScript.constitution, EditorStyles.miniBoldLabel, GUILayout.Width(90));
+            EditorGUILayout.LabelField("Str: " + itemScript.strength, EditorStyles.label, GUILayout.Width(90));
+            EditorGUILayout.LabelField("Agi: " + itemScript.agility, EditorStyles.label, GUILayout.Width(90));
+            EditorGUILayout.LabelField("Con: " + itemScript.constitution, EditorStyles.label, GUILayout.Width(90));
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("Int: " + itemScript.intellect, EditorStyles.miniBoldLabel, GUILayout.Width(70));
-            EditorGUILayout.LabelField("Phys Arm: " + itemScript.physicalArmour, EditorStyles.miniBoldLabel, GUILayout.Width(90));
-            EditorGUILayout.LabelField("Magi Arm: " + itemScript.magicalArmour, EditorStyles.miniBoldLabel, GUILayout.Width(90));
+            EditorGUILayout.LabelField("Int: " + itemScript.intellect, EditorStyles.label, GUILayout.Width(70));
+            EditorGUILayout.LabelField("Phys Arm: " + itemScript.physicalArmour, EditorStyles.label, GUILayout.Width(90));
+            EditorGUILayout.LabelField("Magi Arm: " + itemScript.magicalArmour, EditorStyles.label, GUILayout.Width(90));
             EditorGUILayout.EndHorizontal();
 
             //methodToCall = RandomiseStatValues;
@@ -189,7 +189,14 @@ public class ItemEditor : Editor
         {
             range.min = 0;
         }
-        range.max = realStatValue + 6;
+        if (range.max == realStatValue)
+        {
+            
+        }
+        else
+        {
+            range.max = realStatValue + 6;
+        }
     }
 
     void RandomiseStatValues()
