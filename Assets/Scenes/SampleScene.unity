@@ -451,6 +451,9 @@ MonoBehaviour:
   inventorySlotsWide: 10
   inventorySlotsHigh: 8
   backgroundBorderWidth: 10
+  isItemOnMouse: 0
+  mouseItem: {fileID: 0}
+  itemOnMouse: {fileID: 0}
 --- !u!114 &1627565710
 MonoBehaviour:
   m_ObjectHideFlags: 0

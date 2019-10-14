@@ -78,6 +78,8 @@ public class Item : ScriptableObject
     [HideInInspector] public int inventorySpaceX;
     [HideInInspector] public int inventorySpaceY;
 
+    [HideInInspector] public string name;
+
     // TODO: Add a section for Tooltip on mouseover.
 
     // Possible room to add Trait section. List of Traits. Required for Production game
