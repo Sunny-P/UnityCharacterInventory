@@ -11,51 +11,53 @@ public class ItemEditor : Editor
 {
     Item itemScript;
 
-    struct IntRange
-    {
-        public int min;
-        public int max;
-    }
-    IntRange strengthRange;
-    IntRange agilityRange;
-    IntRange constitutionRange;
-    IntRange intellectRange;
-    IntRange physicalArmourRange;
-    IntRange magicalArmourRange;
+    //struct IntRange
+    //{
+    //    public int min;
+    //    public int max;
+    //}
+    //IntRange strengthRange;
+    //IntRange agilityRange;
+    //IntRange constitutionRange;
+    //IntRange intellectRange;
+    //IntRange physicalArmourRange;
+    //IntRange magicalArmourRange;
 
     delegate void ItemDelegate();
     ItemDelegate methodToCall;
 
-    //bool foldoutImageProperties = false;
-    bool useCustomImage;
-
     SerializedProperty itemImage;
+
+    struct ItemSizeSlot
+    {
+        public Rect rect;
+        public int xId;
+        public int yId;
+        public bool selected;
+
+        public ItemSizeSlot(Rect rect, int xID, int yID, bool isSelected)
+        {
+            this.rect = rect;
+            xId = xID;
+            yId = yID;
+            selected = isSelected;
+        }
+    }
+
+    List<ItemSizeSlot> slots;
 
     // Start is called before the first frame update
     private void OnEnable()
     {
         itemScript = target as Item;
         itemImage = serializedObject.FindProperty("inventorySprite");
-        if (itemScript.inventorySprite != null)
-        {
-            useCustomImage = true;
-        }
-        else
-        {
-            useCustomImage = false;
-        }
 
-        SetStatRangeValues(ref strengthRange, itemScript.strength);
-        SetStatRangeValues(ref agilityRange, itemScript.agility);
-        SetStatRangeValues(ref constitutionRange, itemScript.constitution);
-        SetStatRangeValues(ref intellectRange, itemScript.intellect);
-        SetStatRangeValues(ref physicalArmourRange, itemScript.physicalArmour);
-        SetStatRangeValues(ref magicalArmourRange, itemScript.magicalArmour);
+        slots = new List<ItemSizeSlot>();
     }
 
     public override void OnInspectorGUI()
     {
-        //base.OnInspectorGUI();
+        base.OnInspectorGUI();
         serializedObject.Update();
         
         EditorGUILayout.LabelField("Types", EditorStyles.boldLabel);
@@ -96,12 +98,12 @@ public class ItemEditor : Editor
         else
         {
             float statLabelWidth = 95.0f;
-            CreateLabelWithRange("Strength", statLabelWidth, ref strengthRange.min, ref strengthRange.max);
-            CreateLabelWithRange("Agility", statLabelWidth, ref agilityRange.min, ref agilityRange.max);
-            CreateLabelWithRange("Constitution", statLabelWidth, ref constitutionRange.min, ref constitutionRange.max);
-            CreateLabelWithRange("Intellect", statLabelWidth, ref intellectRange.min, ref intellectRange.max);
-            CreateLabelWithRange("Physical Armour", statLabelWidth, ref physicalArmourRange.min, ref physicalArmourRange.max);
-            CreateLabelWithRange("Magical Armour", statLabelWidth, ref magicalArmourRange.min, ref magicalArmourRange.max);
+            CreateLabelWithRange("Strength", statLabelWidth, ref itemScript.strengthRange.min, ref itemScript.strengthRange.max);
+            CreateLabelWithRange("Agility", statLabelWidth, ref itemScript.agilityRange.min, ref itemScript.agilityRange.max);
+            CreateLabelWithRange("Constitution", statLabelWidth, ref itemScript.constitutionRange.min, ref itemScript.constitutionRange.max);
+            CreateLabelWithRange("Intellect", statLabelWidth, ref itemScript.intellectRange.min, ref itemScript.intellectRange.max);
+            CreateLabelWithRange("Physical Armour", statLabelWidth, ref itemScript.physicalArmourRange.min, ref itemScript.physicalArmourRange.max);
+            CreateLabelWithRange("Magical Armour", statLabelWidth, ref itemScript.magicalArmourRange.min, ref itemScript.magicalArmourRange.max);
 
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField("Str: " + itemScript.strength, EditorStyles.label, GUILayout.Width(90));
@@ -115,7 +117,7 @@ public class ItemEditor : Editor
             EditorGUILayout.EndHorizontal();
 
             //methodToCall = RandomiseStatValues;
-            CreateButton("Randomise Stat Values", methodToCall = RandomiseStatValues, methodToCall = ResetAllStatRangeValues);
+            CreateButton("Randomise Stat Values", methodToCall = itemScript.RandomiseStatValues);
 
             EditorGUILayout.Space();
 
@@ -123,18 +125,47 @@ public class ItemEditor : Editor
         }
         EditorGUILayout.Space();
 
-        // Create methods for editor to determine how much inventory space item will take up
+        Sprite invImage = itemScript.inventorySprite;
+        EditorGUILayout.PropertyField(itemImage, new GUIContent("Inventory Icon"));
+        serializedObject.ApplyModifiedProperties();
 
         EditorGUILayout.Space();
 
-        useCustomImage = GUILayout.Toggle(useCustomImage, "Use Custom Inventory Icon?");
-        if (useCustomImage)
-        {
-            Sprite invImage = itemScript.inventorySprite;
-            EditorGUILayout.PropertyField(itemImage, new GUIContent("Inventory Icon"));
-            serializedObject.ApplyModifiedProperties();
-        }
+        EditorGUILayout.LabelField("Item Inventory Size", EditorStyles.boldLabel);
 
+        EditorGUILayout.HelpBox("Click on the tiles to determine the items size it will be in the inventory. \nOr type in the Width and Height in the fields below.", MessageType.Info, true);
+
+        Rect inventorySize = GUILayoutUtility.GetLastRect();
+
+        Color backgroundColour = new Color(0.1f, 0.1f, 0.1f, 0.9f);
+        Color selectedColour = new Color(1.0f, 0.0f, 0.0f, 1);
+        Color unselectedColour = new Color(1.0f, 0.0f, 0.0f, 0.25f);
+
+        DrawInventorySizeSelection(inventorySize, 20, 20, 5, 5, 1, backgroundColour, selectedColour, unselectedColour);
+
+        InsertSpace(19);
+
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField("Item Size Width");
+        itemScript.inventorySpaceX = EditorGUILayout.DelayedIntField(itemScript.inventorySpaceX);
+        if (itemScript.inventorySpaceX > 5)
+        {
+            itemScript.inventorySpaceX = 5;
+        }
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField("Item Size Height");
+        itemScript.inventorySpaceY = EditorGUILayout.DelayedIntField(itemScript.inventorySpaceY);
+        if (itemScript.inventorySpaceY > 5)
+        {
+            itemScript.inventorySpaceY = 5;
+        }
+        EditorGUILayout.EndHorizontal();
+
+        EvaluateManualItemSize();
+
+        slots.Clear();
         EditorUtility.SetDirty(itemScript);
     }
 
@@ -179,46 +210,108 @@ public class ItemEditor : Editor
         }
     }
 
-    void SetStatRangeValues(ref IntRange range, int realStatValue)
+    void InsertSpace(int numOfSpaces)
     {
-        if (range.min > 5)
+        for (int i = 0; i < numOfSpaces; i++)
         {
-            range.min = realStatValue - 5;
-        }
-        else
-        {
-            range.min = 0;
-        }
-        if (range.max == realStatValue)
-        {
-            
-        }
-        else
-        {
-            range.max = realStatValue + 6;
+            EditorGUILayout.Space();
         }
     }
 
-    void RandomiseStatValues()
+    void DrawInventorySizeSelection(Rect lastPos,float squareWidth, float squareHeight, int squaresWide, int squaresHigh, float borderWidth, Color background, Color selectedSquare, Color unselectSquare)
     {
-        if (itemScript.applyRandomStats)
+        float bgX = lastPos.position.x;
+        float bgY = lastPos.position.y + 50;
+        // Background
+        EditorGUI.DrawRect(
+            new Rect(bgX - borderWidth, 
+            bgY - borderWidth, 
+            squaresWide * squareWidth + (borderWidth * ((squaresWide * borderWidth) + borderWidth)), 
+            squaresHigh * squareHeight + (borderWidth * ((squaresHigh * borderWidth) + borderWidth))), 
+            background);
+
+        int itemWidthCount = 0;
+        for (int i = 0; i < squaresWide; i++)
         {
-            itemScript.strength = Random.Range(strengthRange.min, strengthRange.max);
-            itemScript.agility = Random.Range(agilityRange.min, agilityRange.max);
-            itemScript.constitution = Random.Range(constitutionRange.min, constitutionRange.max);
-            itemScript.intellect = Random.Range(intellectRange.min, intellectRange.max);
-            itemScript.physicalArmour = Random.Range(physicalArmourRange.min, physicalArmourRange.max);
-            itemScript.magicalArmour = Random.Range(magicalArmourRange.min, magicalArmourRange.max);
+            int itemHeightCount = 0;
+            itemWidthCount++;
+
+            for (int j = 0; j < squaresHigh; j++)
+            {
+                itemHeightCount++;
+
+                if (itemHeightCount <= itemScript.inventorySpaceY)
+                {
+                    if (itemWidthCount <= itemScript.inventorySpaceX)
+                    {
+                        // Each slot unit
+                        Rect tempRect = new Rect(bgX + (i * squareWidth) + (borderWidth * i),
+                                bgY + (j * squareWidth) + (borderWidth * j),
+                                squareWidth,
+                                squareHeight);
+
+                        EditorGUI.DrawRect(tempRect, selectedSquare);
+
+                        ItemSizeSlot slot = new ItemSizeSlot(tempRect, i, j, true);
+                        slots.Add(slot);
+                    }
+                    else
+                    {
+                        // Each slot unit
+                        Rect tempRect = new Rect(bgX + (i * squareWidth) + (borderWidth * i),
+                                bgY + (j * squareWidth) + (borderWidth * j),
+                                squareWidth,
+                                squareHeight);
+
+                        EditorGUI.DrawRect(tempRect, unselectSquare);
+
+                        ItemSizeSlot slot = new ItemSizeSlot(tempRect, i, j, false);
+                        slots.Add(slot);
+                    }
+                }
+                else
+                {
+                    // Each slot unit
+                    Rect tempRect = new Rect(bgX + (i * squareWidth) + (borderWidth * i),
+                            bgY + (j * squareWidth) + (borderWidth * j),
+                            squareWidth,
+                            squareHeight);
+
+                    EditorGUI.DrawRect(tempRect, unselectSquare);
+
+                    ItemSizeSlot slot = new ItemSizeSlot(tempRect, i, j, true);
+                    slots.Add(slot);
+                }
+                
+            }
         }
     }
 
-    void ResetAllStatRangeValues()
+    void EvaluateManualItemSize()
     {
-        SetStatRangeValues(ref strengthRange, itemScript.strength);
-        SetStatRangeValues(ref agilityRange, itemScript.agility);
-        SetStatRangeValues(ref constitutionRange, itemScript.constitution);
-        SetStatRangeValues(ref intellectRange, itemScript.intellect);
-        SetStatRangeValues(ref physicalArmourRange, itemScript.physicalArmour);
-        SetStatRangeValues(ref magicalArmourRange, itemScript.magicalArmour);
+        Event click = Event.current;
+
+        switch (click.type)
+        {
+            case EventType.MouseDown:
+                if (Event.current.button == 0)
+                {
+                    foreach (ItemSizeSlot slot in slots)
+                    {
+                        if (Event.current.mousePosition.x > slot.rect.x && Event.current.mousePosition.x < (slot.rect.x + slot.rect.width))
+                        {
+                            if (Event.current.mousePosition.y > slot.rect.y && Event.current.mousePosition.y < (slot.rect.y + slot.rect.height))
+                            {
+                                itemScript.inventorySpaceX = slot.xId + 1;
+                                itemScript.inventorySpaceY = slot.yId + 1;
+                            }
+                        }
+                    }
+                }
+                break;
+
+            default:
+                break;
+        }
     }
 }

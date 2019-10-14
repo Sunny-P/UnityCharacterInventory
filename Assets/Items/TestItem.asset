@@ -18,9 +18,11 @@ MonoBehaviour:
   equipmentSlot: 0
   applyRandomStats: 1
   strength: 0
-  agility: 1
-  constitution: 1
+  agility: 4
+  constitution: 0
   intellect: 0
   physicalArmour: 0
-  magicalArmour: 5
+  magicalArmour: 0
   inventorySprite: {fileID: 21300000, guid: 3613a410bbe250548a2f3399935eb781, type: 3}
+  inventorySpaceX: 3
+  inventorySpaceY: 2

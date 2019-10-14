@@ -24,3 +24,5 @@ MonoBehaviour:
   physicalArmour: 36
   magicalArmour: 0
   inventorySprite: {fileID: 0}
+  inventorySpaceX: 0
+  inventorySpaceY: 0

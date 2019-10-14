@@ -41,27 +41,42 @@ public class Item : ScriptableObject
         Neck
     }
 
+    public struct IntRange
+    {
+        public int min;
+        public int max;
+    }
+
     [Header("Item Types")]
-    public ItemType itemType;
-    public ArmourType armourType;
-    public WeaponType weaponType;
-    public EquipmentSlot equipmentSlot;
+    [HideInInspector] public ItemType itemType;
+    [HideInInspector] public ArmourType armourType;
+    [HideInInspector] public WeaponType weaponType;
+    [HideInInspector] public EquipmentSlot equipmentSlot;
 
     [Header("Stat Bonuses")]
-    public bool applyRandomStats;
-    public int strength;
-    public int agility;
-    public int constitution;
-    public int intellect;
-    public int physicalArmour;
-    public int magicalArmour;
+    [HideInInspector] public bool applyRandomStats;
+    [HideInInspector] public int strength;
+    [HideInInspector] public int agility;
+    [HideInInspector] public int constitution;
+    [HideInInspector] public int intellect;
+    [HideInInspector] public int physicalArmour;
+    [HideInInspector] public int magicalArmour;
+
+    [Header("Random Range")]
+    [HideInInspector] public IntRange strengthRange;
+    [HideInInspector] public IntRange agilityRange;
+    [HideInInspector] public IntRange constitutionRange;
+    [HideInInspector] public IntRange intellectRange;
+    [HideInInspector] public IntRange physicalArmourRange;
+    [HideInInspector] public IntRange magicalArmourRange;
 
     [Header("Image")]
-    public Sprite inventorySprite;
+    [HideInInspector] public Sprite inventorySprite;
 
     // TODO: Add editor functionality to define how much inventorySpace we take up
     [Header("Inventory Space")]
-    public int[,][,] inventorySpace;
+    [HideInInspector] public int inventorySpaceX;
+    [HideInInspector] public int inventorySpaceY;
 
     // TODO: Add a section for Tooltip on mouseover.
 
@@ -70,4 +85,13 @@ public class Item : ScriptableObject
 
     // TODO: Add a function to apply random values to stats -> So we can also dynamically apply random stats on spawn rather than just our predefined item stats
     // Parameters: ref stat value to chance, minRandomRange value, maxRandomRange value
+    public void RandomiseStatValues()
+    {
+        strength = Random.Range(strengthRange.min, strengthRange.max);
+        agility = Random.Range(agilityRange.min, agilityRange.max);
+        constitution = Random.Range(constitutionRange.min, constitutionRange.max);
+        intellect = Random.Range(intellectRange.min, intellectRange.max);
+        physicalArmour = Random.Range(physicalArmourRange.min, physicalArmourRange.max);
+        magicalArmour = Random.Range(magicalArmourRange.min, magicalArmourRange.max);
+    }
 }
