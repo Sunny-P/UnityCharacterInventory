@@ -73,7 +73,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 2
+  m_PixelsPerUnitMultiplier: 10
 --- !u!114 &6118928690006274335
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88,5 +88,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isUsed: 0
   storedItem: {fileID: 0}
-  width: 20
-  height: 20
+  width: 0
+  height: 0

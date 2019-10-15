@@ -39,8 +39,8 @@ public class InventorySlot : MonoBehaviour
 
         slotRect = GetComponent<RectTransform>();
         slotRect.SetParent(slotParent.transform);
-        slotRect.anchorMin = new Vector2(0, 1);
-        slotRect.anchorMax = new Vector2(0, 1);
+        slotRect.anchorMin = new Vector2(0, 1.0f);
+        slotRect.anchorMax = new Vector2(0, 1.0f);
 
         this.width = width;
         this.height = height;
@@ -52,5 +52,6 @@ public class InventorySlot : MonoBehaviour
         slotPosition.y -= (height * id.y);
 
         slotRect.anchoredPosition = slotPosition;
+        slotRect.localScale = new Vector2(1, 1);
     }
 }

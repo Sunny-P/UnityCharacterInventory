@@ -78,7 +78,7 @@ public class Item : ScriptableObject
     [HideInInspector] public int inventorySpaceX;
     [HideInInspector] public int inventorySpaceY;
 
-    [HideInInspector] public string name;
+    [HideInInspector] public string itemName;
 
     // TODO: Add a section for Tooltip on mouseover.
 
