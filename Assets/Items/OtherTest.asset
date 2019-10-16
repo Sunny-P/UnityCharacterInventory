@@ -23,6 +23,8 @@ MonoBehaviour:
   intellect: 0
   physicalArmour: 36
   magicalArmour: 0
-  inventorySprite: {fileID: 0}
-  inventorySpaceX: 0
-  inventorySpaceY: 0
+  inventorySprite: {fileID: 21300000, guid: 3613a410bbe250548a2f3399935eb781, type: 3}
+  equippedSprite: {fileID: 0}
+  inventorySpaceX: 2
+  inventorySpaceY: 2
+  itemName: 

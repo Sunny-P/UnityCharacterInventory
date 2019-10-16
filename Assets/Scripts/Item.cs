@@ -72,6 +72,7 @@ public class Item : ScriptableObject
 
     [Header("Image")]
     [HideInInspector] public Sprite inventorySprite;
+    [HideInInspector] public Sprite equippedSprite;
 
     // TODO: Add editor functionality to define how much inventorySpace we take up
     [Header("Inventory Space")]

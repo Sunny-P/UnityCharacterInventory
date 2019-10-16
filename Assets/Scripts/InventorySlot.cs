@@ -8,18 +8,19 @@ public class InventorySlot : MonoBehaviour
     public bool isUsed;
     public Item storedItem;
 
-    public float width;
-    public float height;
+    public static float width;
+    public static float height;
 
     public struct SlotID
     {
         public int x;
         public int y;
     }
-    int xID;
-    int yID;
+    public SlotID slotID;
 
     RectTransform slotRect;
+
+    InventoryBase invBase;
 
     private void Awake()
     {
@@ -32,18 +33,19 @@ public class InventorySlot : MonoBehaviour
         
     }
 
-    public void Initialise(GameObject slotParent, float width, float height, float offset, SlotID id)
+    public void Initialise(GameObject slotParent, float _width, float _height, float offset, SlotID id)
     {
-        xID = id.x;
-        yID = id.y;
+        invBase = slotParent.GetComponent<InventoryBase>();
+        slotID.x = id.x;
+        slotID.y = id.y;
 
         slotRect = GetComponent<RectTransform>();
         slotRect.SetParent(slotParent.transform);
         slotRect.anchorMin = new Vector2(0, 1.0f);
         slotRect.anchorMax = new Vector2(0, 1.0f);
 
-        this.width = width;
-        this.height = height;
+        width = _width;
+        height = _height;
 
         slotRect.sizeDelta = new Vector2(width, height);
 

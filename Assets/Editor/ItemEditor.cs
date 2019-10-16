@@ -26,7 +26,8 @@ public class ItemEditor : Editor
     delegate void ItemDelegate();
     ItemDelegate methodToCall;
 
-    SerializedProperty itemImage;
+    SerializedProperty itemInventoryImage;
+    SerializedProperty itemEquippedImage;
 
     struct ItemSizeSlot
     {
@@ -50,7 +51,8 @@ public class ItemEditor : Editor
     private void OnEnable()
     {
         itemScript = target as Item;
-        itemImage = serializedObject.FindProperty("inventorySprite");
+        itemInventoryImage = serializedObject.FindProperty("inventorySprite");
+        itemEquippedImage = serializedObject.FindProperty("equippedSprite");
 
         slots = new List<ItemSizeSlot>();
     }
@@ -125,8 +127,9 @@ public class ItemEditor : Editor
         }
         EditorGUILayout.Space();
 
-        Sprite invImage = itemScript.inventorySprite;
-        EditorGUILayout.PropertyField(itemImage, new GUIContent("Inventory Icon"));
+        //Sprite invImage = itemScript.inventorySprite;
+        EditorGUILayout.PropertyField(itemInventoryImage, new GUIContent("Inventory Icon"));
+        EditorGUILayout.PropertyField(itemEquippedImage, new GUIContent("Equipped Icon"));
         serializedObject.ApplyModifiedProperties();
 
         EditorGUILayout.Space();
