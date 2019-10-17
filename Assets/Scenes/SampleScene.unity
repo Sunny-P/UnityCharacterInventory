@@ -1352,6 +1352,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mouseItem: {fileID: 2130020267}
   invBase: {fileID: 1627565709}
+  inventoryCanvas: {fileID: 568477089}
 --- !u!1 &1144538890
 GameObject:
   m_ObjectHideFlags: 0
