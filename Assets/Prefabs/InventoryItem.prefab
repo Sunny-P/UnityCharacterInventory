@@ -88,3 +88,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   item: {fileID: 0}
   slotsUsed: []
+  isMouseItem: 1

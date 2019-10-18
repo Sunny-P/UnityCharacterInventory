@@ -14,6 +14,7 @@ public class InventoryItem : MonoBehaviour
     RectTransform rect;
 
     public List<InventorySlot> slotsUsed;
+    public bool isMouseItem;
 
     Image image;
 
@@ -23,7 +24,7 @@ public class InventoryItem : MonoBehaviour
         
     }
 
-    public void Initialise(GameObject parentObj, Item insertedItem, Vector3 invPosition, Vector3 invScale)
+    public bool Initialise(GameObject parentObj, Item insertedItem, Vector3 invPosition, Vector3 invScale)
     {
         slotsUsed = new List<InventorySlot>();
         rect = GetComponent<RectTransform>();
@@ -34,6 +35,8 @@ public class InventoryItem : MonoBehaviour
 
         rect.position = invPosition;
         rect.localScale = invScale;
+
+        return true;
     }
 
     public void Initialise(GameObject parentObj, Item insertedItem, Vector3 invPosition, Vector3 invScale, Vector2 invPivot)
@@ -62,6 +65,29 @@ public class InventoryItem : MonoBehaviour
             height = InventoryBase.slotHeight * item.inventorySpaceY;
 
             rect.sizeDelta = new Vector2(width, height);
+        }
+    }
+
+    public void SetItem(InventoryItem givenItem)
+    {
+        item = givenItem.item;
+
+        if (item != null)
+        {
+            image.sprite = item.inventorySprite;
+
+            width = InventoryBase.slotWidth * item.inventorySpaceX;
+            height = InventoryBase.slotHeight * item.inventorySpaceY;
+
+            rect.sizeDelta = new Vector2(width, height);
+
+            slotsUsed.Clear();
+            slotsUsed.AddRange(givenItem.slotsUsed);
+        }
+        else
+        {
+            item = null;
+            slotsUsed.Clear();
         }
     }
 }

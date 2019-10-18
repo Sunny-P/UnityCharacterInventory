@@ -6,7 +6,8 @@ using UnityEngine.EventSystems;
 
 public class MouseItemControl : MonoBehaviour
 {
-    public InventoryItem mouseItem;
+    public GameObject mouseItemObject;
+    InventoryItem mouseItem;
     public InventoryBase invBase;
 
     public Canvas inventoryCanvas;
@@ -24,6 +25,7 @@ public class MouseItemControl : MonoBehaviour
 
     private void Awake()
     {
+        mouseItem = mouseItemObject.GetComponent<InventoryItem>();
         if (mouseItem != null)
         {
             mouseItem.Initialise(gameObject, null, transform.position, new Vector3(1.0f, 1.0f));
@@ -34,23 +36,87 @@ public class MouseItemControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (mouseItem.enabled)
+        CheckItemClick();
+        if (mouseItemObject.activeSelf)
         {
             transform.position = Input.mousePosition;
         }
     }
 
-    void PickUpItem()
+    void CheckItemClick()
     {
         // On a left click
         if (Input.GetMouseButtonDown(0))
         {
-            // Are we hovering over an inventory item
-            
-
-            foreach(RaycastResult result in results)
+            // If we need to grab an item
+            if (mouseItem.item == null)
             {
+                foreach (RaycastResult result in GetNewPointerEventRaycast())
+                {
+                    // Is the currently checked object an inventoryItem
+                    if (result.gameObject.name.Contains("InventoryItem"))
+                    {
+                        Debug.Log("InventoryItem hit with click");
+                        InventoryItem checkedResult = result.gameObject.GetComponent<InventoryItem>();
 
+                        // Put item on our mouse
+                        mouseItem.gameObject.SetActive(true);
+                        mouseItem.SetItem(checkedResult);
+
+                        foreach (InventorySlot slot in checkedResult.slotsUsed)
+                        {
+                            slot.isUsed = false;
+                            slot.storedItem = null;
+                        }
+
+                        Destroy(checkedResult.gameObject);
+                    }
+                }
+            }
+            else // We have an item grabbed
+            {
+                // Check if we are hovering over an inventory slot we can drop the item into
+                foreach(RaycastResult result in GetNewPointerEventRaycast())
+                {
+                    if (result.gameObject.name.Contains("InventorySlot"))
+                    {
+                        InventorySlot checkedSlot = result.gameObject.GetComponent<InventorySlot>();
+                        
+
+                        Destroy(mouseItem);
+
+                        if (invBase.AddItem(mouseItem.item, checkedSlot.slotID))
+                        {
+                            Debug.Log("ITEM WAS ADDED FROM MOUSE");
+                            mouseItemObject.AddComponent<InventoryItem>();
+                            mouseItem = mouseItemObject.GetComponent<InventoryItem>();
+                            if (mouseItem.Initialise(gameObject, null, transform.position, new Vector3(1.0f, 1.0f)))
+                            {
+                                mouseItem.gameObject.SetActive(false);
+                            }
+
+                            //mouseItem.SetItem(emptyItem);
+                            
+                        }
+                        else // Otherwise put the item back in the inventory slots it was previously in
+                        {
+                            invBase.AddItem(mouseItem.item, mouseItem.slotsUsed[0].slotID);
+
+                            Debug.Log("ITEM WAS ADDED FROM MOUSE");
+                            mouseItemObject.AddComponent<InventoryItem>();
+                            mouseItem = mouseItemObject.GetComponent<InventoryItem>();
+                            if (mouseItem.Initialise(gameObject, null, transform.position, new Vector3(1.0f, 1.0f)))
+                            {
+                                mouseItem.gameObject.SetActive(false);
+                            }
+
+                            //mouseItem.SetItem(emptyItem);
+                            
+                        }
+                    }
+                }
+
+                
             }
         }
     }

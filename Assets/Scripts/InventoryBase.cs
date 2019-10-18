@@ -203,11 +203,13 @@ public class InventoryBase : MonoBehaviour
     public bool AddItem(Item itemToAdd, InventorySlot.SlotID atID)
     {
         bool itemAdded = false;
+        bool canItemBeAdded = true;
         List<InventorySlot> addToSlots = new List<InventorySlot>();
 
-        addToSlots.Add(inventorySlots[atID.x, atID.y]);
         if (!inventorySlots[atID.x, atID.y].isUsed)
         {
+            addToSlots.Add(inventorySlots[atID.x, atID.y]);
+
             // Check if the whole item can fit in this part of the inventory
             for (int itemWidth = 0; itemWidth < itemToAdd.inventorySpaceX; itemWidth++)
             {
@@ -215,26 +217,50 @@ public class InventoryBase : MonoBehaviour
                 if (atID.x + itemWidth >= inventorySlotsWide)
                 {
                     addToSlots.Clear();
+                    canItemBeAdded = false;
                     break;
                 }
                 else if (itemAdded)
                 {
+                    addToSlots.Clear();
                     break;
                 }
+                else if (!canItemBeAdded)
+                {
+                    addToSlots.Clear();
+                    break;
+                }
+
                 for (int itemHeight = 0; itemHeight < itemToAdd.inventorySpaceY; itemHeight++)
                 {
                     // If we are going out of range of the array, break
                     if (atID.y + itemHeight >= inventorySlotsHigh)
                     {
                         addToSlots.Clear();
+                        canItemBeAdded = false;
                         break;
                     }
                     else if (itemAdded)
                     {
+                        addToSlots.Clear();
+                        break;
+                    }
+                    else if (!canItemBeAdded)
+                    {
+                        addToSlots.Clear();
                         break;
                     }
 
-                    addToSlots.Add(inventorySlots[atID.x + itemWidth, atID.y + itemHeight]);
+                    if (inventorySlots[atID.x + itemWidth, atID.y + itemHeight].isUsed)
+                    {
+                        addToSlots.Clear();
+                        canItemBeAdded = false;
+                        break;
+                    }
+                    else
+                    {
+                        addToSlots.Add(inventorySlots[atID.x + itemWidth, atID.y + itemHeight]);
+                    }
 
                     // If we have checked the whole width & height of the item
                     // We can add it to these slots
@@ -244,23 +270,27 @@ public class InventoryBase : MonoBehaviour
                         //Debug.Log("itemWidth = " + itemWidth + "| itemSpaceX = " + itemToAdd.inventorySpaceX);
                         if (itemWidth + 1 == itemToAdd.inventorySpaceX)
                         {
-                            Debug.Log("Attempting to instantiate new inventory item");
-                            GameObject newItemObj = Instantiate(itemIcon);
-                            InventoryItem newItem = newItemObj.GetComponent<InventoryItem>();
-                            newItem.Initialise(gameObject, itemToAdd, inventorySlots[atID.x, atID.y].transform.position, new Vector3(0.95f, 0.95f), new Vector2(-0.025f, 1.025f));
-                            newItem.slotsUsed = addToSlots;
-                            foreach (InventorySlot slot in addToSlots)
+                            if (canItemBeAdded)
                             {
-                                slot.isUsed = true;
-                                slot.storedItem = newItem.item;
+                                Debug.Log("Attempting to instantiate new inventory item");
+                                GameObject newItemObj = Instantiate(itemIcon);
+                                InventoryItem newItem = newItemObj.GetComponent<InventoryItem>();
+                                newItem.Initialise(gameObject, itemToAdd, inventorySlots[atID.x, atID.y].transform.position, new Vector3(0.95f, 0.95f), new Vector2(-0.025f, 1.025f));
+                                newItem.slotsUsed = addToSlots;
+                                foreach (InventorySlot slot in addToSlots)
+                                {
+                                    slot.isUsed = true;
+                                    slot.storedItem = newItem.item;
+                                }
+                                itemAdded = true;
+                                return itemAdded;
                             }
-                            itemAdded = true;
                         }
                     }
                 }
             }
         }
-
+        Debug.Log(itemAdded);
         return itemAdded;
     }
 
