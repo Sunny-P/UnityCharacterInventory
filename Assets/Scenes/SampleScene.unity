@@ -1350,7 +1350,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f362065e623df1a46b10683f4f2fc3f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mouseItemObject: {fileID: 1831464723}
   mouseItem: {fileID: 2130020267}
   invBase: {fileID: 1627565709}
   inventoryCanvas: {fileID: 568477089}
@@ -1876,12 +1875,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1831464723 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8518148428427532018, guid: 3030f92d0508f844ab0a223ce260ba6f,
-    type: 3}
-  m_PrefabInstance: {fileID: 2130020261}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1846378492
 GameObject:
   m_ObjectHideFlags: 0
@@ -2167,7 +2160,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 2130020261}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1831464723}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2e36d220a5e059341be4d00762f94468, type: 3}

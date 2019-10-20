@@ -6,8 +6,7 @@ using UnityEngine.EventSystems;
 
 public class MouseItemControl : MonoBehaviour
 {
-    public GameObject mouseItemObject;
-    InventoryItem mouseItem;
+    public InventoryItem mouseItem;
     public InventoryBase invBase;
 
     public Canvas inventoryCanvas;
@@ -25,7 +24,6 @@ public class MouseItemControl : MonoBehaviour
 
     private void Awake()
     {
-        mouseItem = mouseItemObject.GetComponent<InventoryItem>();
         if (mouseItem != null)
         {
             mouseItem.Initialise(gameObject, null, transform.position, new Vector3(1.0f, 1.0f));
@@ -37,7 +35,7 @@ public class MouseItemControl : MonoBehaviour
     void Update()
     {
         CheckItemClick();
-        if (mouseItemObject.activeSelf)
+        if (mouseItem.enabled)
         {
             transform.position = Input.mousePosition;
         }
@@ -73,50 +71,36 @@ public class MouseItemControl : MonoBehaviour
                     }
                 }
             }
-            else // We have an item grabbed
+        }
+        else if (Input.GetMouseButtonUp(0)) // We have an item grabbed
+        {
+            if (mouseItem.item != null)
             {
                 // Check if we are hovering over an inventory slot we can drop the item into
-                foreach(RaycastResult result in GetNewPointerEventRaycast())
+                foreach (RaycastResult result in GetNewPointerEventRaycast())
                 {
                     if (result.gameObject.name.Contains("InventorySlot"))
                     {
                         InventorySlot checkedSlot = result.gameObject.GetComponent<InventorySlot>();
-                        
-
-                        Destroy(mouseItem);
 
                         if (invBase.AddItem(mouseItem.item, checkedSlot.slotID))
                         {
                             Debug.Log("ITEM WAS ADDED FROM MOUSE");
-                            mouseItemObject.AddComponent<InventoryItem>();
-                            mouseItem = mouseItemObject.GetComponent<InventoryItem>();
-                            if (mouseItem.Initialise(gameObject, null, transform.position, new Vector3(1.0f, 1.0f)))
-                            {
-                                mouseItem.gameObject.SetActive(false);
-                            }
 
-                            //mouseItem.SetItem(emptyItem);
-                            
+                            mouseItem.ClearItem();
+                            mouseItem.gameObject.SetActive(false);
                         }
                         else // Otherwise put the item back in the inventory slots it was previously in
                         {
                             invBase.AddItem(mouseItem.item, mouseItem.slotsUsed[0].slotID);
 
                             Debug.Log("ITEM WAS ADDED FROM MOUSE");
-                            mouseItemObject.AddComponent<InventoryItem>();
-                            mouseItem = mouseItemObject.GetComponent<InventoryItem>();
-                            if (mouseItem.Initialise(gameObject, null, transform.position, new Vector3(1.0f, 1.0f)))
-                            {
-                                mouseItem.gameObject.SetActive(false);
-                            }
 
-                            //mouseItem.SetItem(emptyItem);
-                            
+                            mouseItem.ClearItem();
+                            mouseItem.gameObject.SetActive(false);
                         }
                     }
                 }
-
-                
             }
         }
     }

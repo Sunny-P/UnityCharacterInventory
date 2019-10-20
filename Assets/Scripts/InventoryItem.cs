@@ -90,4 +90,17 @@ public class InventoryItem : MonoBehaviour
             slotsUsed.Clear();
         }
     }
+
+    public void ClearItem()
+    {
+        item = null;
+
+        image.sprite = null;
+
+        width = 0;
+        height = 0;
+        rect.sizeDelta = new Vector2(width, height);
+
+        slotsUsed.Clear();
+    }
 }
