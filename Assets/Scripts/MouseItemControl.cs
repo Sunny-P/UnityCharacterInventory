@@ -26,7 +26,7 @@ public class MouseItemControl : MonoBehaviour
     {
         if (mouseItem != null)
         {
-            mouseItem.Initialise(gameObject, null, transform.position, new Vector3(1.0f, 1.0f));
+            mouseItem.Initialise(gameObject, null, transform.position, new Vector3(1.0f, 1.0f), true);
             mouseItem.gameObject.SetActive(false);
         }
     }
@@ -77,10 +77,14 @@ public class MouseItemControl : MonoBehaviour
             if (mouseItem.item != null)
             {
                 // Check if we are hovering over an inventory slot we can drop the item into
-                foreach (RaycastResult result in GetNewPointerEventRaycast())
+                List<RaycastResult> mouseRaycastList = GetNewPointerEventRaycast();
+                int incrementsWithoutInventorySlot = 0;
+                foreach (RaycastResult result in mouseRaycastList)
                 {
+                    incrementsWithoutInventorySlot++;
                     if (result.gameObject.name.Contains("InventorySlot"))
                     {
+                        incrementsWithoutInventorySlot--;
                         InventorySlot checkedSlot = result.gameObject.GetComponent<InventorySlot>();
 
                         if (invBase.AddItem(mouseItem.item, checkedSlot.slotID))
@@ -100,6 +104,18 @@ public class MouseItemControl : MonoBehaviour
                             mouseItem.gameObject.SetActive(false);
                         }
                     }
+                }
+                // Checking if the number of increments done in the list equals the list size
+                // Meaning no inventory slots were hovered over
+                // We are placing the item back in the slot it was originally in
+                if (incrementsWithoutInventorySlot == mouseRaycastList.Count)
+                {
+                    invBase.AddItem(mouseItem.item, mouseItem.slotsUsed[0].slotID);
+
+                    Debug.Log("ITEM WAS ADDED FROM MOUSE - OUT OF INVENTORY SLOT BOUNDS");
+
+                    mouseItem.ClearItem();
+                    mouseItem.gameObject.SetActive(false);
                 }
             }
         }

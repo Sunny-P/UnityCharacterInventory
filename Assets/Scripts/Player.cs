@@ -40,6 +40,7 @@ public class Player : Entity
     void Update()
     {
         UpdateAllConditions();
+        CalculateAllDerivedStats();
         //if () // Check if player is dead
         if (!isDead)
         {

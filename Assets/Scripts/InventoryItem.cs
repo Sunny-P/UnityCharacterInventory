@@ -14,7 +14,7 @@ public class InventoryItem : MonoBehaviour
     RectTransform rect;
 
     public List<InventorySlot> slotsUsed;
-    public bool isMouseItem;
+    public bool isMouseItem = false;
 
     Image image;
 
@@ -24,7 +24,7 @@ public class InventoryItem : MonoBehaviour
         
     }
 
-    public bool Initialise(GameObject parentObj, Item insertedItem, Vector3 invPosition, Vector3 invScale)
+    public bool Initialise(GameObject parentObj, Item insertedItem, Vector3 invPosition, Vector3 invScale, bool mouseItem = false)
     {
         slotsUsed = new List<InventorySlot>();
         rect = GetComponent<RectTransform>();
@@ -36,10 +36,12 @@ public class InventoryItem : MonoBehaviour
         rect.position = invPosition;
         rect.localScale = invScale;
 
+        isMouseItem = mouseItem;
+
         return true;
     }
 
-    public void Initialise(GameObject parentObj, Item insertedItem, Vector3 invPosition, Vector3 invScale, Vector2 invPivot)
+    public void Initialise(GameObject parentObj, Item insertedItem, Vector3 invPosition, Vector3 invScale, Vector2 invPivot, bool mouseItem = false)
     {
         slotsUsed = new List<InventorySlot>();
         rect = GetComponent<RectTransform>();
@@ -51,6 +53,8 @@ public class InventoryItem : MonoBehaviour
         rect.position = invPosition;
         rect.localScale = invScale;
         rect.pivot = invPivot;
+
+        isMouseItem = mouseItem;
     }
 
     public void SetItem(Item givenItem)
@@ -61,8 +65,8 @@ public class InventoryItem : MonoBehaviour
         {
             image.sprite = item.inventorySprite;
 
-            width = InventoryBase.slotWidth * item.inventorySpaceX;
-            height = InventoryBase.slotHeight * item.inventorySpaceY;
+            width = InventorySlot.width * item.inventorySpaceX;
+            height = InventorySlot.height * item.inventorySpaceY;
 
             rect.sizeDelta = new Vector2(width, height);
         }
@@ -76,8 +80,8 @@ public class InventoryItem : MonoBehaviour
         {
             image.sprite = item.inventorySprite;
 
-            width = InventoryBase.slotWidth * item.inventorySpaceX;
-            height = InventoryBase.slotHeight * item.inventorySpaceY;
+            width = InventorySlot.width * item.inventorySpaceX;
+            height = InventorySlot.height * item.inventorySpaceY;
 
             rect.sizeDelta = new Vector2(width, height);
 
