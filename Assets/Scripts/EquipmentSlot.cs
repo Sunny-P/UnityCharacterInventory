@@ -15,13 +15,9 @@ public class EquipmentSlot : MonoBehaviour
     public static float width;
     public static float height;
 
-    RectTransform rect;
+    int id;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        rect = GetComponent<RectTransform>();
-    }
+    RectTransform rect;
 
     // Update is called once per frame
     void Update()
@@ -29,9 +25,37 @@ public class EquipmentSlot : MonoBehaviour
         
     }
 
-    public void Initialise(GameObject parent, float _width, float _height, float offset, Item.EquipmentSlot equipSlot)
+    public bool Initialise(GameObject parent, RectTransform parentRect, float _width, float _height, float offset, Item.EquipmentSlot equipSlot, InventorySlot.SlotID slotID)
     {
+        bool shiftedAcross = false;
+
+        rect = GetComponent<RectTransform>();
+
         width = _width;
         height = _height;
+
+        id = slotID.x;
+
+        rect = GetComponent<RectTransform>();
+        rect.SetParent(parent.transform);
+        rect.anchorMin = new Vector2(0, 1.0f);
+        rect.anchorMax = new Vector2(0, 1.0f);
+
+        rect.sizeDelta = new Vector2(width, height);
+        
+        Vector2 slotPosition = new Vector2(offset, -offset);
+        rect.anchoredPosition = slotPosition;
+
+        slotPosition.y -= (height * id);
+
+        // If this equipment slot is below the height of the parent RectTransform
+        // Change its anchor to anchor to the right hand top corner
+        // Then make it sit from the top right corner going down from there
+        
+
+        rect.anchoredPosition = slotPosition;
+        rect.localScale = new Vector2(1, 1);
+
+        return shiftedAcross;
     }
 }
