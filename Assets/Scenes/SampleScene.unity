@@ -1589,8 +1589,8 @@ MonoBehaviour:
     type: 3}
   slotWidth: 20
   slotHeight: 20
-  offsetFromEdge: 0
-  equipmentSlotsUsed: 0000000002000000030000000300000003000000030000000300000003000000
+  offsetFromEdge: 1
+  equipmentSlotsUsed: 00000000020000000300000003000000030000000300000003000000030000000300000003000000
   equipmentSlotsObj: []
   equipmentSlots: []
 --- !u!1 &1627565707

@@ -51,7 +51,18 @@ public class EquipmentSlot : MonoBehaviour
         // If this equipment slot is below the height of the parent RectTransform
         // Change its anchor to anchor to the right hand top corner
         // Then make it sit from the top right corner going down from there
-        
+        if (slotPosition.y - height < -parentRect.rect.height)
+        {
+            Debug.Log("This one is out of bounds");
+
+            // Reset the height
+            slotPosition.y = -offset;
+            slotPosition.y -= (height * slotID.y);
+
+            slotPosition.x += (parentRect.rect.width - width - offset);
+
+            shiftedAcross = true;
+        }
 
         rect.anchoredPosition = slotPosition;
         rect.localScale = new Vector2(1, 1);
