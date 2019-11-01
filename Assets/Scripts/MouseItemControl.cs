@@ -78,13 +78,13 @@ public class MouseItemControl : MonoBehaviour
             {
                 // Check if we are hovering over an inventory slot we can drop the item into
                 List<RaycastResult> mouseRaycastList = GetNewPointerEventRaycast();
-                int incrementsWithoutInventorySlot = 0;
+                int incrementsWithoutUsableSlot = 0;
                 foreach (RaycastResult result in mouseRaycastList)
                 {
-                    incrementsWithoutInventorySlot++;
+                    incrementsWithoutUsableSlot++;
                     if (result.gameObject.name.Contains("InventorySlot"))
                     {
-                        incrementsWithoutInventorySlot--;
+                        incrementsWithoutUsableSlot--;
                         InventorySlot checkedSlot = result.gameObject.GetComponent<InventorySlot>();
 
                         if (invBase.AddItem(mouseItem.item, checkedSlot.slotID))
@@ -104,11 +104,15 @@ public class MouseItemControl : MonoBehaviour
                             mouseItem.gameObject.SetActive(false);
                         }
                     }
+                    else if (result.gameObject.name.Contains("Character Render Surface"))
+                    {
+                        
+                    }
                 }
                 // Checking if the number of increments done in the list equals the list size
                 // Meaning no inventory slots were hovered over
                 // We are placing the item back in the slot it was originally in
-                if (incrementsWithoutInventorySlot == mouseRaycastList.Count)
+                if (incrementsWithoutUsableSlot == mouseRaycastList.Count)
                 {
                     invBase.AddItem(mouseItem.item, mouseItem.slotsUsed[0].slotID);
 

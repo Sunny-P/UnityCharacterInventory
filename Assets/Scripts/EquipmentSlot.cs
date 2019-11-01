@@ -18,6 +18,7 @@ public class EquipmentSlot : MonoBehaviour
     int id;
 
     RectTransform rect;
+    Image image;
 
     // Update is called once per frame
     void Update()
@@ -30,13 +31,13 @@ public class EquipmentSlot : MonoBehaviour
         bool shiftedAcross = false;
 
         rect = GetComponent<RectTransform>();
+        image = GetComponent<Image>();
 
         width = _width;
         height = _height;
 
         id = slotID.x;
 
-        rect = GetComponent<RectTransform>();
         rect.SetParent(parent.transform);
         rect.anchorMin = new Vector2(0, 1.0f);
         rect.anchorMax = new Vector2(0, 1.0f);
@@ -66,6 +67,84 @@ public class EquipmentSlot : MonoBehaviour
 
         rect.anchoredPosition = slotPosition;
         rect.localScale = new Vector2(1, 1);
+
+        equipmentSlot = equipSlot;
+
+        switch (equipmentSlot)
+        {
+            case Item.EquipmentSlot.Head:
+                if (EquipPanelSprites.head != null)
+                {
+                    image.sprite = EquipPanelSprites.head;
+                }
+                break;
+
+            case Item.EquipmentSlot.Shoulders:
+                if (EquipPanelSprites.shoulders != null)
+                {
+                    image.sprite = EquipPanelSprites.shoulders;
+                }
+                break;
+
+            case Item.EquipmentSlot.Chest:
+                if (EquipPanelSprites.chest != null)
+                {
+                    image.sprite = EquipPanelSprites.chest;
+                }
+                break;
+
+            case Item.EquipmentSlot.Legs:
+                if (EquipPanelSprites.legs != null)
+                {
+                    image.sprite = EquipPanelSprites.legs;
+                }
+                break;
+
+            case Item.EquipmentSlot.Feet:
+                if (EquipPanelSprites.feet != null)
+                {
+                    image.sprite = EquipPanelSprites.feet;
+                }
+                break;
+
+            case Item.EquipmentSlot.Hands:
+                if (EquipPanelSprites.hands != null)
+                {
+                    image.sprite = EquipPanelSprites.hands;
+                }
+                break;
+
+            case Item.EquipmentSlot.Weapon:
+                if (EquipPanelSprites.weapon != null)
+                {
+                    image.sprite = EquipPanelSprites.weapon;
+                }
+                break;
+
+            case Item.EquipmentSlot.Ring1:
+                if (EquipPanelSprites.ring1 != null)
+                {
+                    image.sprite = EquipPanelSprites.ring1;
+                }
+                break;
+
+            case Item.EquipmentSlot.Ring2:
+                if (EquipPanelSprites.ring2 != null)
+                {
+                    image.sprite = EquipPanelSprites.ring2;
+                }
+                break;
+
+            case Item.EquipmentSlot.Neck:
+                if (EquipPanelSprites.neck != null)
+                {
+                    image.sprite = EquipPanelSprites.neck;
+                }
+                break;
+
+            default:
+                break;
+        }
 
         return shiftedAcross;
     }

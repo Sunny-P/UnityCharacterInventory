@@ -22,7 +22,7 @@ public class CharacterPanelCameraController : MonoBehaviour
 
     [SerializeField]
     [Range(0.0f, 360.0f)]
-    float xAngleOffset = 0.0f;
+    public float xAngleOffset = 0.0f;
     float xAngle;
 
     // Start is called before the first frame update
