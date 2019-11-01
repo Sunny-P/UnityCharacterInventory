@@ -8,6 +8,7 @@ public class MouseItemControl : MonoBehaviour
 {
     public InventoryItem mouseItem;
     public InventoryBase invBase;
+    EquipmentPanelControl equipPanelControl;
 
     public Canvas inventoryCanvas;
 
@@ -60,11 +61,22 @@ public class MouseItemControl : MonoBehaviour
                         // Put item on our mouse
                         mouseItem.gameObject.SetActive(true);
                         mouseItem.SetItem(checkedResult);
-
-                        foreach (InventorySlot slot in checkedResult.slotsUsed)
+                        if (checkedResult.isEquipped)
                         {
-                            slot.isUsed = false;
-                            slot.storedItem = null;
+                            checkedResult.usedEquipSlot.isUsed = false;
+                            checkedResult.usedEquipSlot.equippedItem = null;
+
+                            mouseItem.isEquipped = true;
+                            mouseItem.usedEquipSlot = checkedResult.usedEquipSlot;
+                            //checkedResult.usedEquipSlot = null;
+                        }
+                        else
+                        {
+                            foreach (InventorySlot slot in checkedResult.slotsUsed)
+                            {
+                                slot.isUsed = false;
+                                slot.storedItem = null;
+                            }
                         }
 
                         Destroy(checkedResult.gameObject);
@@ -104,9 +116,45 @@ public class MouseItemControl : MonoBehaviour
                             mouseItem.gameObject.SetActive(false);
                         }
                     }
+                    // Hovering over character render, so dropping here equips the item. Equip the item
                     else if (result.gameObject.name.Contains("Character Render Surface"))
                     {
-                        
+                        equipPanelControl = result.gameObject.GetComponent<EquipmentPanelControl>();
+
+                        for (int i = 0; i < equipPanelControl.equipmentSlots.Length-1; i++)
+                        {
+                            
+                            if (mouseItem.item.equipmentSlot == equipPanelControl.equipmentSlots[i].equipmentSlot)
+                            {
+                                // Equip the item into this slot if this slot isn't used
+                                if (!equipPanelControl.equipmentSlots[i].isUsed)
+                                {
+                                    incrementsWithoutUsableSlot--;
+
+                                    InventoryItem equippedItem = Instantiate(invBase.itemIcon).GetComponent<InventoryItem>();
+
+                                    Vector3 equipInterfacePos = equipPanelControl.equipmentSlots[i].gameObject.transform.position;
+                                    equipInterfacePos.x += (EquipmentSlot.width * 0.1f);
+                                    equipInterfacePos.y -= (EquipmentSlot.height * 0.1f);
+
+                                    equippedItem.Initialise(equipPanelControl.equipmentSlots[i].gameObject, 
+                                        equippedItem.item,
+                                        equipInterfacePos, 
+                                        Vector3.one);
+
+                                    equippedItem.SetItem(mouseItem, true);
+                                    equippedItem.isEquipped = true;
+                                    equippedItem.usedEquipSlot = equipPanelControl.equipmentSlots[i];
+
+                                    equipPanelControl.equipmentSlots[i].isUsed = true;
+                                    equipPanelControl.equipmentSlots[i].equippedItem = equippedItem.item;
+
+                                    mouseItem.ClearItem();
+                                    mouseItem.gameObject.SetActive(false);
+                                    break;
+                                }
+                            }
+                        }
                     }
                 }
                 // Checking if the number of increments done in the list equals the list size
@@ -114,8 +162,9 @@ public class MouseItemControl : MonoBehaviour
                 // We are placing the item back in the slot it was originally in
                 if (incrementsWithoutUsableSlot == mouseRaycastList.Count)
                 {
-                    invBase.AddItem(mouseItem.item, mouseItem.slotsUsed[0].slotID);
 
+                    invBase.AddItem(mouseItem.item, mouseItem.slotsUsed[0].slotID);
+                    
                     Debug.Log("ITEM WAS ADDED FROM MOUSE - OUT OF INVENTORY SLOT BOUNDS");
 
                     mouseItem.ClearItem();

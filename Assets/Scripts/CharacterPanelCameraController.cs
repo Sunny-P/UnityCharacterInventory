@@ -25,6 +25,14 @@ public class CharacterPanelCameraController : MonoBehaviour
     public float xAngleOffset = 0.0f;
     float xAngle;
 
+    [Header("Interface Button Sensitivity")]
+    [SerializeField]
+    [Range(1.0f, 200.0f)]
+    float buttonSens = 20.0f;
+
+    bool turnLeft = false;
+    bool turnRight = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -34,6 +42,8 @@ public class CharacterPanelCameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        TurnCamera();
+
         if (targetObject != null)
         {
             xAngle = targetObject.transform.rotation.eulerAngles.y + xAngleOffset;
@@ -64,5 +74,39 @@ public class CharacterPanelCameraController : MonoBehaviour
         if (angle > 360F)
             angle -= 360F;
         return Mathf.Clamp(angle, min, max);
+    }
+
+    public void StartLeftTurn()
+    {
+        turnLeft = true;
+    }
+    public void EndLeftTurn()
+    {
+        turnLeft = false;
+    }
+
+    public void StartRightTurn()
+    {
+        turnRight = true;
+    }
+    public void EndRightTurn()
+    {
+        turnRight = false;
+    }
+
+    void TurnCamera()
+    {
+        if (turnLeft)
+        {
+            Debug.Log("Camera Turning Left");
+            xAngleOffset += (buttonSens * Time.unscaledDeltaTime);
+            xAngleOffset = ClampAngle(xAngleOffset, -360.0f, 360.0f);
+        }
+        else if (turnRight)
+        {
+            Debug.Log("Camera Turning Right");
+            xAngleOffset -= (buttonSens * Time.unscaledDeltaTime);
+            xAngleOffset = ClampAngle(xAngleOffset, -360.0f, 360.0f);
+        }
     }
 }

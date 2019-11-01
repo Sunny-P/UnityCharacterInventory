@@ -57,12 +57,10 @@ public class InventoryBase : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.J))
         {
             AddItem(item1);
-            Debug.Log("Item1 should be added");
         }
         else if (Input.GetKeyDown(KeyCode.K))
         {
             AddItem(item2);
-            Debug.Log("Item2 should be added");
         }
     }
 
@@ -166,7 +164,7 @@ public class InventoryBase : MonoBehaviour
                                 {
                                     if (canItemBeAdded)
                                     {
-                                        Debug.Log("Attempting to instantiate new inventory item");
+                                        //Debug.Log("Attempting to instantiate new inventory item");
                                         GameObject newItemObj = Instantiate(itemIcon);
                                         InventoryItem newItem = newItemObj.GetComponent<InventoryItem>();
                                         newItem.Initialise(gameObject, itemToAdd, inventorySlots[i, j].transform.position, new Vector3(0.95f, 0.95f), new Vector2(-0.025f, 1.025f));
@@ -197,7 +195,7 @@ public class InventoryBase : MonoBehaviour
         if (!itemAdded)
         {
             addToSlots.Clear();
-            Debug.Log("Item can't be added");
+            //Debug.Log("Item can't be added");
         }
         return itemAdded;
     }
@@ -280,7 +278,7 @@ public class InventoryBase : MonoBehaviour
                         {
                             if (canItemBeAdded)
                             {
-                                Debug.Log("Attempting to instantiate new inventory item");
+                                //Debug.Log("Attempting to instantiate new inventory item");
                                 GameObject newItemObj = Instantiate(itemIcon);
                                 InventoryItem newItem = newItemObj.GetComponent<InventoryItem>();
                                 newItem.Initialise(gameObject, itemToAdd, inventorySlots[atID.x, atID.y].transform.position, new Vector3(0.95f, 0.95f), new Vector2(-0.025f, 1.025f));
@@ -298,7 +296,7 @@ public class InventoryBase : MonoBehaviour
                 }
             }
         }
-        Debug.Log(itemAdded);
+        //Debug.Log(itemAdded);
         return itemAdded;
     }
 }

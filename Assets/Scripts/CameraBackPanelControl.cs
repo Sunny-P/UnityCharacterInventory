@@ -19,6 +19,8 @@ public class CameraBackPanelControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        targetDistance = distanceFromCamera + characterCameraControl.targetDistance;
+
         Vector3 distPos = new Vector3(0.0f, 0.0f, targetDistance);
         transform.localPosition = distPos;
     }

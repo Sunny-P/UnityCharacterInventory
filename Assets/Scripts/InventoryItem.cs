@@ -16,6 +16,9 @@ public class InventoryItem : MonoBehaviour
     public List<InventorySlot> slotsUsed;
     public bool isMouseItem = false;
 
+    public bool isEquipped = false;
+    public EquipmentSlot usedEquipSlot;
+
     Image image;
 
     // Update is called once per frame
@@ -57,6 +60,17 @@ public class InventoryItem : MonoBehaviour
         isMouseItem = mouseItem;
     }
 
+    public void SetWidth(float width)
+    {
+        Vector2 updatedWidth = new Vector2(width, rect.sizeDelta.y);
+        rect.sizeDelta = updatedWidth;
+    }
+    public void SetHeight(float height)
+    {
+        Vector2 updatedHeight = new Vector2(rect.sizeDelta.x, height);
+        rect.sizeDelta = updatedHeight;
+    }
+
     public void SetItem(Item givenItem)
     {
         item = givenItem;
@@ -72,16 +86,26 @@ public class InventoryItem : MonoBehaviour
         }
     }
 
-    public void SetItem(InventoryItem givenItem)
+    public void SetItem(InventoryItem givenItem, bool isEquipping = false)
     {
         item = givenItem.item;
 
         if (item != null)
         {
-            image.sprite = item.inventorySprite;
+            if (isEquipping)
+            {
+                image.sprite = item.equippedSprite;
 
-            width = InventorySlot.width * item.inventorySpaceX;
-            height = InventorySlot.height * item.inventorySpaceY;
+                width = EquipmentSlot.width * 0.9f;
+                height = EquipmentSlot.height * 0.9f;
+            }
+            else
+            {
+                image.sprite = item.inventorySprite;
+
+                width = InventorySlot.width * item.inventorySpaceX;
+                height = InventorySlot.height * item.inventorySpaceY;
+            }
 
             rect.sizeDelta = new Vector2(width, height);
 

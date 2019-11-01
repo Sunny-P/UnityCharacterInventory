@@ -81,7 +81,7 @@ public class Player : Entity
             {
                 //if (hit.collider.tag.Contains("Finish"))
                 //{
-                    navAgent.SetDestination(hit.point);
+                    //navAgent.SetDestination(hit.point);
                 //}
             }
 
