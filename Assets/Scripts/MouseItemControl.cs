@@ -8,7 +8,7 @@ public class MouseItemControl : MonoBehaviour
 {
     public InventoryItem mouseItem;
     public InventoryBase invBase;
-    EquipmentPanelControl equipPanelControl;
+    EquipmentPanelControl equipPanelControl = null;
 
     public Canvas inventoryCanvas;
 
@@ -52,6 +52,7 @@ public class MouseItemControl : MonoBehaviour
             {
                 foreach (RaycastResult result in GetNewPointerEventRaycast())
                 {
+                    // Picking up Items in Inventory or from an Equip Slot
                     // Is the currently checked object an inventoryItem
                     if (result.gameObject.name.Contains("InventoryItem"))
                     {
@@ -61,6 +62,8 @@ public class MouseItemControl : MonoBehaviour
                         // Put item on our mouse
                         mouseItem.gameObject.SetActive(true);
                         mouseItem.SetItem(checkedResult);
+
+                        // Item was equipped - unequipping now
                         if (checkedResult.isEquipped)
                         {
                             checkedResult.usedEquipSlot.isUsed = false;
@@ -69,8 +72,9 @@ public class MouseItemControl : MonoBehaviour
                             mouseItem.isEquipped = true;
                             mouseItem.usedEquipSlot = checkedResult.usedEquipSlot;
                             //checkedResult.usedEquipSlot = null;
+                            CharacterPanelStatControl.OnItemRemove(mouseItem.item);
                         }
-                        else
+                        else // Item was in inventory
                         {
                             foreach (InventorySlot slot in checkedResult.slotsUsed)
                             {
@@ -94,6 +98,7 @@ public class MouseItemControl : MonoBehaviour
                 foreach (RaycastResult result in mouseRaycastList)
                 {
                     incrementsWithoutUsableSlot++;
+                    // Item is being put in inventory slot
                     if (result.gameObject.name.Contains("InventorySlot"))
                     {
                         incrementsWithoutUsableSlot--;
@@ -119,42 +124,53 @@ public class MouseItemControl : MonoBehaviour
                     // Hovering over character render, so dropping here equips the item. Equip the item
                     else if (result.gameObject.name.Contains("Character Render Surface"))
                     {
-                        equipPanelControl = result.gameObject.GetComponent<EquipmentPanelControl>();
-
-                        for (int i = 0; i < equipPanelControl.equipmentSlots.Length-1; i++)
+                        if (equipPanelControl == null)
                         {
-                            
-                            if (mouseItem.item.equipmentSlot == equipPanelControl.equipmentSlots[i].equipmentSlot)
-                            {
-                                // Equip the item into this slot if this slot isn't used
-                                if (!equipPanelControl.equipmentSlots[i].isUsed)
-                                {
-                                    incrementsWithoutUsableSlot--;
-
-                                    InventoryItem equippedItem = Instantiate(invBase.itemIcon).GetComponent<InventoryItem>();
-
-                                    Vector3 equipInterfacePos = equipPanelControl.equipmentSlots[i].gameObject.transform.position;
-                                    equipInterfacePos.x += (EquipmentSlot.width * 0.1f);
-                                    equipInterfacePos.y -= (EquipmentSlot.height * 0.1f);
-
-                                    equippedItem.Initialise(equipPanelControl.equipmentSlots[i].gameObject, 
-                                        equippedItem.item,
-                                        equipInterfacePos, 
-                                        Vector3.one);
-
-                                    equippedItem.SetItem(mouseItem, true);
-                                    equippedItem.isEquipped = true;
-                                    equippedItem.usedEquipSlot = equipPanelControl.equipmentSlots[i];
-
-                                    equipPanelControl.equipmentSlots[i].isUsed = true;
-                                    equipPanelControl.equipmentSlots[i].equippedItem = equippedItem.item;
-
-                                    mouseItem.ClearItem();
-                                    mouseItem.gameObject.SetActive(false);
-                                    break;
-                                }
-                            }
+                            equipPanelControl = result.gameObject.GetComponent<EquipmentPanelControl>();
                         }
+
+                        if (equipPanelControl.EquipItem(mouseItem))
+                        {
+                            incrementsWithoutUsableSlot--;
+                            mouseItem.ClearItem();
+                            mouseItem.gameObject.SetActive(false);
+                        }
+
+                        //for (int i = 0; i < equipPanelControl.equipmentSlots.Length-1; i++)
+                        //{
+                            
+                        //    if (mouseItem.item.equipmentSlot == equipPanelControl.equipmentSlots[i].equipmentSlot)
+                        //    {
+                        //        // Equip the item into this slot if this slot isn't used
+                        //        if (!equipPanelControl.equipmentSlots[i].isUsed)
+                        //        {
+                        //            incrementsWithoutUsableSlot--;
+
+                        //            InventoryItem equippedItem = Instantiate(invBase.itemIcon).GetComponent<InventoryItem>();
+
+                        //            Vector3 equipInterfacePos = equipPanelControl.equipmentSlots[i].gameObject.transform.position;
+                        //            equipInterfacePos.x += (EquipmentSlot.width * 0.1f);
+                        //            equipInterfacePos.y -= (EquipmentSlot.height * 0.1f);
+
+                        //            equippedItem.Initialise(equipPanelControl.equipmentSlots[i].gameObject, 
+                        //                equippedItem.item,
+                        //                equipInterfacePos, 
+                        //                Vector3.one);
+
+                        //            equippedItem.SetItem(mouseItem, true);
+                        //            equippedItem.isEquipped = true;
+                        //            equippedItem.usedEquipSlot = equipPanelControl.equipmentSlots[i];
+
+                        //            CharacterPanelStatControl.OnItemEquip(equippedItem.item);
+
+                        //            equipPanelControl.equipmentSlots[i].isUsed = true;
+                        //            equipPanelControl.equipmentSlots[i].equippedItem = equippedItem.item;
+
+                                    
+                        //            break;
+                        //        }
+                        //    }
+                        //}
                     }
                 }
                 // Checking if the number of increments done in the list equals the list size
@@ -163,12 +179,42 @@ public class MouseItemControl : MonoBehaviour
                 if (incrementsWithoutUsableSlot == mouseRaycastList.Count)
                 {
 
-                    invBase.AddItem(mouseItem.item, mouseItem.slotsUsed[0].slotID);
-                    
-                    Debug.Log("ITEM WAS ADDED FROM MOUSE - OUT OF INVENTORY SLOT BOUNDS");
+                    if (invBase.AddItem(mouseItem.item, mouseItem.slotsUsed[0].slotID))
+                    {
+                        Debug.Log("ITEM WAS ADDED FROM MOUSE - OUT OF INVENTORY SLOT BOUNDS");
 
-                    mouseItem.ClearItem();
-                    mouseItem.gameObject.SetActive(false);
+                        mouseItem.ClearItem();
+                        mouseItem.gameObject.SetActive(false);
+                    }
+                    else
+                    {
+                        if (invBase.AddItem(mouseItem.item))
+                        {
+                            Debug.Log("ITEM WAS ADDED FROM MOUSE - OUT OF INVENTORY SLOT BOUNDS");
+
+                            mouseItem.ClearItem();
+                            mouseItem.gameObject.SetActive(false);
+                        }
+                        else
+                        {
+                            
+                            if (mouseItem.isEquipped)
+                            {
+                                Debug.Log("MouseItemControl: Re-equipping item. Not enough free inventory space to unequip");
+                                // Re-equip item in its slot.
+                                // Not enough inventory space
+                                equipPanelControl.EquipItem(mouseItem);
+
+                                mouseItem.ClearItem();
+                                mouseItem.gameObject.SetActive(false);
+                            }
+                            else
+                            {
+                                Debug.Log("MouseItemControl: Item was out of bounds. Tried adding to own slots, then any slots. This shouldn't be hit");
+                            }
+                        }
+                    }
+                    
                 }
             }
         }

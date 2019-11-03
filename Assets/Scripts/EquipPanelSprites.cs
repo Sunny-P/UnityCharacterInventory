@@ -6,25 +6,25 @@ using UnityEngine.UI;
 public class EquipPanelSprites : MonoBehaviour
 {
     [SerializeField]
-    Sprite headSlot;
+    Sprite headSlot = null;
     [SerializeField]
-    Sprite shouldersSlot;
+    Sprite shouldersSlot = null;
     [SerializeField]
-    Sprite chestSlot;
+    Sprite chestSlot = null;
     [SerializeField]
-    Sprite legsSlot;
+    Sprite legsSlot = null;
     [SerializeField]
-    Sprite feetSlot;
+    Sprite feetSlot = null;
     [SerializeField]
-    Sprite handsSlot;
+    Sprite handsSlot = null;
     [SerializeField]
-    Sprite weaponSlot;
+    Sprite weaponSlot = null;
     [SerializeField]
-    Sprite ring1Slot;
+    Sprite ring1Slot = null;
     [SerializeField]
-    Sprite ring2Slot;
+    Sprite ring2Slot = null;
     [SerializeField]
-    Sprite neckSlot;
+    Sprite neckSlot = null;
 
     static public Sprite head;
     static public Sprite shoulders;

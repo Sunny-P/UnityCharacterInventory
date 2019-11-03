@@ -15,6 +15,9 @@ public class EquipmentPanelControl : MonoBehaviour
     [HideInInspector] public GameObject[] equipmentSlotsObj;
     [HideInInspector] public EquipmentSlot[] equipmentSlots;
 
+    [Header("Inventory Reference")]
+    public InventoryBase invBase;
+
     RectTransform rect;
 
     // Start is called before the first frame update
@@ -51,5 +54,42 @@ public class EquipmentPanelControl : MonoBehaviour
                 shiftedId++;
             }
         }
+    }
+
+    public bool EquipItem(InventoryItem invItem)
+    {
+        for (int i = 0; i < equipmentSlots.Length; i++)
+        {
+
+            if (invItem.item.equipmentSlot == equipmentSlots[i].equipmentSlot)
+            {
+                // Equip the item into this slot if this slot isn't used
+                if (!equipmentSlots[i].isUsed)
+                {
+                    InventoryItem equippedItem = Instantiate(invBase.itemIcon).GetComponent<InventoryItem>();
+
+                    Vector3 equipInterfacePos = equipmentSlots[i].gameObject.transform.position;
+                    equipInterfacePos.x += (EquipmentSlot.width * 0.1f);
+                    equipInterfacePos.y -= (EquipmentSlot.height * 0.1f);
+
+                    equippedItem.Initialise(equipmentSlots[i].gameObject,
+                        equippedItem.item,
+                        equipInterfacePos,
+                        Vector3.one);
+
+                    equippedItem.SetItem(invItem, true);
+                    equippedItem.isEquipped = true;
+                    equippedItem.usedEquipSlot = equipmentSlots[i];
+
+                    CharacterPanelStatControl.OnItemEquip(equippedItem.item);
+
+                    equipmentSlots[i].isUsed = true;
+                    equipmentSlots[i].equippedItem = equippedItem.item;
+
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

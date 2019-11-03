@@ -28,13 +28,39 @@ public class CharacterPanelStatControl : MonoBehaviour
     public string physicalArmour;
     public string magicalArmour;
 
+    static string statStrength;
+    static string statAgility;
+    static string statConstitution;
+    static string statIntellect;
+    static string statCurrentHealth;
+    static string statMaxHealth;
+    static string statPhysicalDamageReduction;
+    static string statMagicalDamageReduction;
+    static string statPhysicalArmour;
+    static string statMagicalArmour;
+
     [Header("Entity to Mirror Stat Values From")]
     public Entity characterEntity;
+    static Entity statCharacterEntity;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        statStrength = strength;
+        statAgility = agility;
+        statConstitution = constitution;
+        statIntellect = intellect;
+        statCurrentHealth = currentHealth;
+        statMaxHealth = maxHealth;
+        statPhysicalDamageReduction = physicalDamageReduction;
+        statMagicalDamageReduction = magicalDamageReduction;
+        statPhysicalArmour = physicalArmour;
+        statMagicalArmour = magicalArmour;
+
+        if (characterEntity != null)
+        {
+            statCharacterEntity = characterEntity;
+        }
     }
 
     // Update is called once per frame
@@ -77,5 +103,41 @@ public class CharacterPanelStatControl : MonoBehaviour
     {
         int realValue = (int)characterEntity.GetType().GetField(statLiteralName).GetValue(characterEntity);
         updatedField.text = baseText + realValue;
+    }
+
+    public static void OnItemEquip(Item item)
+    {
+        IncreaseStatValue(statStrength, item.strength);
+        IncreaseStatValue(statAgility, item.agility);
+        IncreaseStatValue(statConstitution, item.constitution);
+        IncreaseStatValue(statIntellect, item.intellect);
+        IncreaseStatValue(statPhysicalArmour, item.physicalArmour);
+        IncreaseStatValue(statMagicalArmour, item.magicalArmour);
+    }
+
+    public static void OnItemRemove(Item item)
+    {
+        DecreaseStatValue(statStrength, item.strength);
+        DecreaseStatValue(statAgility, item.agility);
+        DecreaseStatValue(statConstitution, item.constitution);
+        DecreaseStatValue(statIntellect, item.intellect);
+        DecreaseStatValue(statPhysicalArmour, item.physicalArmour);
+        DecreaseStatValue(statMagicalArmour, item.magicalArmour);
+    }
+
+    static void IncreaseStatValue(string statToChange, int increaseBy)
+    {
+        int statValue = (int)statCharacterEntity.GetType().GetField(statToChange).GetValue(statCharacterEntity);
+        statValue += increaseBy;
+
+        statCharacterEntity.GetType().GetField(statToChange).SetValue(statCharacterEntity, statValue);
+    }
+
+    static void DecreaseStatValue(string statToChange, int decreaseBy)
+    {
+        int statValue = (int)statCharacterEntity.GetType().GetField(statToChange).GetValue(statCharacterEntity);
+        statValue -= decreaseBy;
+
+        statCharacterEntity.GetType().GetField(statToChange).SetValue(statCharacterEntity, statValue);
     }
 }

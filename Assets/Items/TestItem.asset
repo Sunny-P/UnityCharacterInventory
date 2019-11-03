@@ -15,16 +15,16 @@ MonoBehaviour:
   itemType: 1
   armourType: 0
   weaponType: 0
-  equipmentSlot: 0
-  applyRandomStats: 1
-  strength: 0
-  agility: 0
-  constitution: 0
+  equipmentSlot: 7
+  applyRandomStats: 0
+  strength: 4
+  agility: 4
+  constitution: 35
   intellect: 2
-  physicalArmour: 7
-  magicalArmour: 3
+  physicalArmour: 0
+  magicalArmour: 25
   inventorySprite: {fileID: 21300000, guid: 3613a410bbe250548a2f3399935eb781, type: 3}
-  equippedSprite: {fileID: 0}
+  equippedSprite: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
   inventorySpaceX: 1
   inventorySpaceY: 1
   itemName: 
