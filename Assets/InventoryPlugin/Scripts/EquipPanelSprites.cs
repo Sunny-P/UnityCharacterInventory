@@ -39,6 +39,11 @@ public class EquipPanelSprites : MonoBehaviour
 
     private void Start()
     {
+        
+    }
+
+    private void Awake()
+    {
         head = headSlot;
         shoulders = shouldersSlot;
         chest = chestSlot;
