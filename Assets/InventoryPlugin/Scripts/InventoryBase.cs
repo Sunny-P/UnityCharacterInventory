@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class InventoryBase : MonoBehaviour
 {
@@ -32,8 +33,7 @@ public class InventoryBase : MonoBehaviour
 
     // ITEMS FOR TEST SPAWNING
     [Header("TESTING")]
-    public Item item1;
-    public Item item2;
+    public List<Item> items;
 
     // Start is called before the first frame update
     void Start()
@@ -54,13 +54,14 @@ public class InventoryBase : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.J))
+        if (Input.GetKeyDown(KeyCode.I))
         {
-            AddItem(item1);
+            AddItem(items[Random.Range(0, items.Count)]);
         }
-        else if (Input.GetKeyDown(KeyCode.K))
+        if (Input.GetKeyDown(KeyCode.R))
         {
-            AddItem(item2);
+            string activeSceneName = SceneManager.GetActiveScene().name;
+            SceneManager.LoadSceneAsync(activeSceneName);
         }
     }
 

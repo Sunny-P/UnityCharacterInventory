@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 059f6bcc50c845540a7039bccdc67d1b, type: 3}
+  m_Name: TestItem3
+  m_EditorClassIdentifier: 
+  itemType: 1
+  armourType: 0
+  weaponType: 0
+  equipmentSlot: 1
+  applyRandomStats: 1
+  strength: 1
+  agility: 4
+  constitution: 0
+  intellect: 3
+  physicalArmour: 8
+  magicalArmour: 6
+  inventorySprite: {fileID: 21300000, guid: 3613a410bbe250548a2f3399935eb781, type: 3}
+  equippedSprite: {fileID: 21300000, guid: 3613a410bbe250548a2f3399935eb781, type: 3}
+  inventorySpaceX: 2
+  inventorySpaceY: 1
+  itemName: 
